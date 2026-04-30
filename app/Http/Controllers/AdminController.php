@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
+use Illuminate\Validation\Rules\Password;
+
 
 class AdminController extends Controller
 {
@@ -65,17 +67,29 @@ class AdminController extends Controller
             'position_id' => ['required', 'exists:positions,id'],
         ]);
 
+        // Get old/latest assignment
+        $oldAssignment = $user->userRoles()
+            ->latest()
+            ->first();
+
+        $oldLabel = $oldAssignment
+            ? $this->assignmentLabel($oldAssignment)
+            : 'None';
+
+        // Add new assignment
         $assignment = $this->addAssignment($user, $data);
+
+        $newLabel = $this->assignmentLabel($assignment);
 
         ActivityLog::create([
             'user_id' => auth()->id(),
             'action' => 'admin.users.assignment.update',
-            'description' => 'Assigned '.$this->assignmentLabel($assignment).' to '.$user->email,
+            'description' => "Assignment Added Old [{$oldLabel}]  New [{$newLabel}] for {$user->email}",
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
         ]);
 
-        return back()->with('status', 'User assignment updated.');
+        return back()->with('status', 'User assignment updated successfully.');
     }
 
     public function switchUser(Request $request, User $user): RedirectResponse
@@ -127,7 +141,7 @@ class AdminController extends Controller
         ActivityLog::create([
             'user_id' => auth()->id(),
             'action' => 'admin.users.destroy',
-            'description' => 'Deleted user '.$deletedEmail,
+            'description' => "Deleted user '{$deletedEmail}' by Admin",
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
         ]);
@@ -169,8 +183,24 @@ class AdminController extends Controller
     {
         return $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'confirmed', 'min:6'],
+
+            'email' => [
+                'required',
+                'email:rfc,dns',
+                'max:255',
+                'unique:users,email'
+            ],
+
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->mixedCase()
+                    ->letters()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised()
+            ],
             'role_id' => ['required', 'exists:roles,id'],
             'department_id' => ['required', 'exists:departments,id'],
             'position_id' => ['required', 'exists:positions,id'],

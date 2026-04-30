@@ -78,14 +78,31 @@
                                         <div class="user-email">{{ $user->email }}</div>
                                     </td>
                                     <td>
-                                        <div class="assignment-list">
-                                            @forelse ($user->userRoles as $assignment)
-                                                <span class="assignment-pill">
-                                                    {{ $assignment->role?->name ?? 'N/A' }} / {{ $assignment->department?->name ?? 'N/A' }} / {{ $assignment->position?->name ?? 'N/A' }}
-                                                </span>
-                                            @empty
-                                                <span class="muted">No assignment</span>
-                                            @endforelse
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Role</th>
+                                                        <th>Department</th>
+                                                        <th>Position</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @forelse ($user->userRoles as $assignment)
+                                                        <tr>
+                                                            <td>{{ $assignment->role?->name ?? 'N/A' }}</td>
+                                                            <td>{{ $assignment->department?->name ?? 'N/A' }}</td>
+                                                            <td>{{ $assignment->position?->name ?? 'N/A' }}</td>
+                                                        </tr>
+                                                    @empty
+                                                        <tr>
+                                                            <td colspan="3" class="text-center text-muted">
+                                                                No assignment
+                                                            </td>
+                                                        </tr>
+                                                    @endforelse
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </td>
                                     <td>

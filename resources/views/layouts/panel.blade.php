@@ -171,7 +171,9 @@
         .table-wrap::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
         table { width: 100%; border-collapse: collapse; min-width: 900px; }
         .users-table { min-width: 1180px; }
-        th, td { padding: 14px; border-bottom: 1px solid #334155; text-align: left; vertical-align: top; }
+        th, td { padding: 14px; border-bottom: 1px solid #334155; text-align: left;
+         /* vertical-align: top; */
+         }
         th { color: #38bdf8; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
         td { color: #e2e8f0; }
         .sticky-actions {

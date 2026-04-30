@@ -17,7 +17,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
-
+use Illuminate\Validation\Rules\Password;
 class RegisteredUserController extends Controller
 {
     /**
@@ -37,8 +37,8 @@ class RegisteredUserController extends Controller
     {
        $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed|min:6',
+            'email' => 'required|email:rfc,dns|unique:users,email',
+            'password' => ['required', 'confirmed', Rules\Password::min(8)->letters()->mixedCase()->numbers()->symbols()]
         ]);
 
         $user = User::create([
