@@ -1,4 +1,4 @@
-<section>
+<!-- <section>
     <header>
         <h2>Delete Account</h2>
         <p class="muted">Once your account is deleted, all of its resources and data will be permanently deleted.</p>
@@ -20,4 +20,4 @@
             <button class="btn btn-danger" type="submit">Delete Account</button>
         </div>
     </form>
-</section>
+</section> -->
