@@ -4,7 +4,6 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
@@ -65,12 +64,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         ->name('switch-back');
 });
 
-// USER ROUTES
-Route::middleware(['auth', 'activity'])->group(function () {
-    Route::get('/user/dashboard', [UserController::class, 'index'])
-        ->name('user.dashboard');
-});
-
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verify.otp');
 Route::get('/otp', function () {
     return view('otp');
@@ -83,3 +76,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/user.php';

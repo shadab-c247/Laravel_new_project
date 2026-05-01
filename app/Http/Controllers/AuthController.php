@@ -39,7 +39,7 @@ class AuthController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        // ✅ Admin check
+        // Admin check
         if (
             $userRole &&
             $userRole->department_id == 1 &&
