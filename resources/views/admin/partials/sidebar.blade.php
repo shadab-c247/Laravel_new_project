@@ -11,8 +11,10 @@
 
     <nav class="side-nav">
         <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
-        <a href="{{ route('admin.dashboard') }}#create-user">Create User</a>
-        <a href="{{ route('admin.dashboard') }}#users">Users</a>
+        <a href="{{ route('admin.users') }}" class="{{ request()->routeIs('admin.users') ? 'active' : '' }}">Users</a>
+        <a href="{{ route('admin.departments') }}" class="{{ request()->routeIs('admin.departments') ? 'active' : '' }}">Departments</a>
+        <a href="{{ route('admin.roles') }}" class="{{ request()->routeIs('admin.roles') ? 'active' : '' }}">Roles</a>
+        <a href="{{ route('admin.positions') }}" class="{{ request()->routeIs('admin.positions') ? 'active' : '' }}">Positions</a>
         <a href="{{ route('admin.activity-logs') }}" class="{{ request()->routeIs('admin.activity-logs') ? 'active' : '' }}">Activity Logs</a>
         <a href="{{ route('profile.edit') }}">Profile</a>
     </nav>

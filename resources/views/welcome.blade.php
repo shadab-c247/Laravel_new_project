@@ -146,6 +146,93 @@
         font-size: 14px;
         color: #64748b;
     }
+    .workflow {
+    padding: 60px;
+    text-align: center;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.step {
+    background: #1e293b;
+    padding: 25px;
+    border-radius: 12px;
+}
+
+.number {
+    font-size: 22px;
+    font-weight: bold;
+    color: #38bdf8;
+    margin-bottom: 10px;
+}
+
+.security {
+    padding: 60px;
+    text-align: center;
+}
+
+.subtitle {
+    color: #94a3b8;
+    margin-bottom: 30px;
+}
+
+.security-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    padding: 60px;
+    background: #020617;
+    text-align: center;
+}
+
+.stat h2 {
+    color: #38bdf8;
+    font-size: 32px;
+}
+
+.stat p {
+    color: #94a3b8;
+}
+
+.testimonials {
+    padding: 60px;
+    text-align: center;
+}
+
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.faq {
+    padding: 60px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.faq-item {
+    margin-bottom: 20px;
+}
+
+.faq-item h4 {
+    color: #38bdf8;
+}
+
+.faq-item p {
+    color: #94a3b8;
+}
 </style>
 </head>
 <body>
@@ -198,6 +285,110 @@
         <span>Developer</span>
         <span>Finance</span>
         <span>Support</span>
+    </div>
+</section>
+
+<section class="workflow">
+    <h2>How It Works</h2>
+
+    <div class="steps">
+        <div class="step">
+            <div class="number">1</div>
+            <h3>Register</h3>
+            <p>Create your account securely</p>
+        </div>
+
+        <div class="step">
+            <div class="number">2</div>
+            <h3>Enable MFA</h3>
+            <p>Add extra layer of protection</p>
+        </div>
+
+        <div class="step">
+            <div class="number">3</div>
+            <h3>Assign Roles</h3>
+            <p>Manage departments & permissions</p>
+        </div>
+
+        <div class="step">
+            <div class="number">4</div>
+            <h3>Access System</h3>
+            <p>Login & switch roles easily</p>
+        </div>
+    </div>
+</section>
+
+<section class="security">
+    <h2>Security First Approach</h2>
+    <p class="subtitle">Built with modern security standards</p>
+
+    <div class="security-grid">
+        <div class="card">
+            <h3>JWT Tokens</h3>
+            <p>Secure and stateless authentication</p>
+        </div>
+
+        <div class="card">
+            <h3>MFA Enabled</h3>
+            <p>OTP & authenticator support</p>
+        </div>
+
+        <div class="card">
+            <h3>Session Control</h3>
+            <p>Manage user sessions effectively</p>
+        </div>
+    </div>
+</section>
+
+<section class="stats">
+    <div class="stat">
+        <h2>10K+</h2>
+        <p>Users</p>
+    </div>
+
+    <div class="stat">
+        <h2>99.9%</h2>
+        <p>Uptime</p>
+    </div>
+
+    <div class="stat">
+        <h2>500+</h2>
+        <p>Organizations</p>
+    </div>
+</section>
+
+<section class="testimonials">
+    <h2>What Developers Say</h2>
+
+    <div class="testimonial-grid">
+        <div class="card">
+            <p>"SecureAuth made our system very secure."</p>
+            <h4>- XYZ Company</h4>
+        </div>
+
+        <div class="card">
+            <p>"Role switching is super helpful."</p>
+            <h4>- ABC Company</h4>
+        </div>
+    </div>
+</section>
+
+<section class="faq">
+    <h2>FAQs</h2>
+
+    <div class="faq-item">
+        <h4>Is JWT secure?</h4>
+        <p>Yes, when implemented properly.</p>
+    </div>
+
+    <div class="faq-item">
+        <h4>Can I enable MFA?</h4>
+        <p>Yes, multiple options available.</p>
+    </div>
+
+    <div class="faq-item">
+        <h4>Multiple roles allowed?</h4>
+        <p>Yes, users can switch roles easily.</p>
     </div>
 </section>
 
