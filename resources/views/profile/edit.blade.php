@@ -15,7 +15,8 @@
                 <p>Update your account information, password and account access settings.</p>
             </div>
 
-            <a href="{{ route('dashboard') }}" class="btn btn-secondary">Dashboard</a>
+            <!--  dashboard button for user -->
+            <!-- <a href="{{ route('dashboard') }}" class="btn btn-secondary">Dashboard</a> -->
         </header>
 
         <section class="content-area">

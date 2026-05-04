@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PermissionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,10 +16,30 @@ Route::middleware(['auth', 'activity'])->group(function () {
         ->name('dashboard');
 });
 
-// ADMIN ROUTES
+// ADMIN ROUTES - Admin only routes with admin middleware
 Route::middleware(['auth', 'admin', 'activity'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])
         ->name('dashboard');
+    Route::post('/users', [AdminController::class, 'storeUser'])
+        ->name('users.store');
+    Route::put('/users/{user}/assignment', [AdminController::class, 'updateAssignment'])
+        ->name('users.assignment.update');
+    Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])
+        ->name('users.destroy');
+    Route::post('/users/{user}/switch', [AdminController::class, 'switchUser'])
+        ->name('users.switch');
+    Route::get('/permissions', [PermissionController::class, 'index'])
+        ->name('permissions.index');
+    Route::get('/permissions/{user}/manage/{userRole}', [PermissionController::class, 'manage'])
+        ->name('permissions.manage');
+    Route::post('/permissions/{user}/manage/{userRole}', [PermissionController::class, 'store'])
+        ->name('permissions.store');
+    Route::get('/permissions/{user}/roles', [PermissionController::class, 'getUserRoles'])
+        ->name('permissions.user-roles');
+});
+
+// ADMIN MODULE ROUTES - Admin panel module routes with admin middleware
+Route::middleware(['auth', 'admin', 'activity'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/users', [AdminController::class, 'users'])
         ->name('users');
     Route::get('/departments', [AdminController::class, 'departments'])
@@ -45,14 +66,6 @@ Route::middleware(['auth', 'admin', 'activity'])->prefix('admin')->name('admin.'
         ->name('positions.update');
     Route::delete('/positions/{position}', [AdminController::class, 'destroyPosition'])
         ->name('positions.destroy');
-    Route::post('/users', [AdminController::class, 'storeUser'])
-        ->name('users.store');
-    Route::put('/users/{user}/assignment', [AdminController::class, 'updateAssignment'])
-        ->name('users.assignment.update');
-    Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])
-        ->name('users.destroy');
-    Route::post('/users/{user}/switch', [AdminController::class, 'switchUser'])
-        ->name('users.switch');
     Route::get('/activity-logs', [AdminController::class, 'activityLogs'])
         ->name('activity-logs');
     Route::get('/activities/export', [AdminController::class, 'export'])

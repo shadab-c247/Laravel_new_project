@@ -11,11 +11,20 @@
 
     <nav class="side-nav">
         <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
-        <a href="{{ route('admin.users') }}" class="{{ request()->routeIs('admin.users') ? 'active' : '' }}">Users</a>
-        <a href="{{ route('admin.departments') }}" class="{{ request()->routeIs('admin.departments') ? 'active' : '' }}">Departments</a>
-        <a href="{{ route('admin.roles') }}" class="{{ request()->routeIs('admin.roles') ? 'active' : '' }}">Roles</a>
-        <a href="{{ route('admin.positions') }}" class="{{ request()->routeIs('admin.positions') ? 'active' : '' }}">Positions</a>
-        <a href="{{ route('admin.activity-logs') }}" class="{{ request()->routeIs('admin.activity-logs') ? 'active' : '' }}">Activity Logs</a>
+        
+        @php
+            $accessibleModules = auth()->user()->getAccessibleModules();
+        @endphp
+        
+        @foreach($accessibleModules as $module)
+            @if($module->admin_route && $module->slug !== 'dashboard')
+                <a href="{{ route($module->admin_route) }}" class="{{ request()->routeIs($module->admin_route) ? 'active' : '' }}">
+                    {{ $module->name }}
+                </a>
+            @endif
+        @endforeach
+        
+        <a href="{{ route('admin.permissions.index') }}" class="{{ request()->routeIs('admin.permissions.*') ? 'active' : '' }}">Permissions</a>
         <a href="{{ route('profile.edit') }}">Profile</a>
     </nav>
 

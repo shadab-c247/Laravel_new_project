@@ -14,10 +14,13 @@ class UserController extends Controller
             'userRoles.role',
         ])->find(auth()->id());
 
+        $userRoles = $user->userRoles;
+
         $selectedUserRole = session('admin_selected_user_role_id')
             ? $user->userRoles->firstWhere('id', (int) session('admin_selected_user_role_id'))
             : $user->userRoles->first();
+        
 
-        return view('user.dashboard', compact('user', 'selectedUserRole'));
+        return view('user.dashboard', compact('user', 'selectedUserRole', 'userRoles'));
     }
 }
