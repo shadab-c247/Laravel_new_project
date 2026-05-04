@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'user'  => \App\Http\Middleware\UserMiddleware::class,
             'activity' => \App\Http\Middleware\LogActivity::class,
+            'module.permission' => \App\Http\Middleware\CheckModulePermission::class,
 
         ]);
     })

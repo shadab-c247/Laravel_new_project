@@ -10,7 +10,20 @@
     </div>
 
     <nav class="side-nav">
-        <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') || request()->routeIs('user.dashboard') ? 'active' : '' }}">Dashboard</a>
+        <a href="{{ route('user.dashboard') }}" class="{{ request()->routeIs('user.dashboard') ? 'active' : '' }}">Dashboard</a>
+        
+        @php
+            $accessibleModules = auth()->user()->getAccessibleModules();
+        @endphp
+        
+        @foreach($accessibleModules as $module)
+            @if($module->user_route && $module->slug !== 'dashboard')
+                <a href="{{ route($module->user_route) }}" class="{{ request()->routeIs($module->user_route) ? 'active' : '' }}">
+                    {{ $module->name }}
+                </a>
+            @endif
+        @endforeach
+        
         <a href="{{ route('profile.edit') }}">Profile</a>
     </nav>
 

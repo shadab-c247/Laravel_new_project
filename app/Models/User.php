@@ -18,7 +18,7 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory, Notifiable, HasRoles;
 
     /**
-     * ✅ Fallback (recommended for stability)
+     *  Fallback (recommended for stability)
      */
     protected $fillable = [
         'name',
@@ -48,7 +48,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * 🔐 JWT Identifier
+     *  JWT Identifier
      */
     public function getJWTIdentifier()
     {
@@ -56,7 +56,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * 🔐 JWT Custom Claims
+     * JWT Custom Claims
      */
     public function getJWTCustomClaims()
     {
@@ -64,7 +64,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * 🔢 Generate OTP
+     *  Generate OTP
      */
     public function generateOtp()
     {
@@ -113,12 +113,92 @@ class User extends Authenticatable implements JWTSubject
 
     public function isAdmin(): bool
     {
+        // Check if the user has the admin role
         $roles = $this->relationLoaded('userRoles')
             ? $this->userRoles
             : $this->userRoles()->get();
-
         return $roles->contains(fn (UserRole $userRole) => (int) $userRole->department_id === 1
             && (int) $userRole->role_id === 1
             && (int) $userRole->position_id === 1);
+    }
+
+    public function getAccessibleModules()
+    {
+        // Admin has access to all modules
+        if ($this->isAdmin()) {
+            return \App\Models\Module::where('is_active', true)->orderBy('order')->get();
+        }
+
+        // Get the selected user role if in switch mode
+        $userRoleId = session('admin_selected_user_role_id');
+        
+        if (!$userRoleId) {
+            // If not in switch mode, get the user's active role
+            $userRole = $this->userRoles()->where('is_active', true)->first();
+            if (!$userRole) {
+                return collect();
+            }
+            $userRoleId = $userRole->id;
+        }
+
+        // Get modules where user has view permission
+        $moduleIds = \App\Models\UserModulePermission::where('user_role_id', $userRoleId)
+            ->where('can_view', true)
+            ->with('modulePermission.module')
+            ->get()
+            ->pluck('modulePermission.module.id')
+            ->unique()
+            ->filter();
+
+        // Return modules that the user has access to
+        return \App\Models\Module::whereIn('id', $moduleIds)
+            ->where('is_active', true)
+            ->orderBy('order')
+            ->get();
+    }
+
+    public function hasModulePermission($moduleSlug, $action)
+    {
+        // Admin always has access
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        // Get the selected user role if in switch mode
+        $userRoleId = session('admin_selected_user_role_id');
+        
+        if (!$userRoleId) {
+            // If not in switch mode, get the user's active role
+            $userRole = $this->userRoles()->where('is_active', true)->first();
+            if (!$userRole) {
+                return false;
+            }
+            $userRoleId = $userRole->id;
+        }
+
+        // Get the module
+        $module = \App\Models\Module::where('slug', $moduleSlug)->first();
+        if (!$module) {
+            return false;
+        }
+
+        // Get the module permission
+        $modulePermission = $module->modulePermissions()->where('action', $action)->first();
+        if (!$modulePermission) {
+            return false;
+        }
+
+        // Check if user has the permission
+        $userModulePermission = \App\Models\UserModulePermission::where('user_role_id', $userRoleId)
+            ->where('module_permission_id', $modulePermission->id)
+            ->first();
+
+        if (!$userModulePermission) {
+            return false;
+        }
+
+        // Check specific action permission
+        $permissionField = 'can_' . $action;
+        return isset($userModulePermission->$permissionField) && $userModulePermission->$permissionField;
     }
 }

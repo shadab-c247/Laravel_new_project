@@ -1,8 +1,8 @@
-@extends('layouts.panel', ['title' => 'Users Management'])
+@extends('layouts.panel', ['title' => 'Users'])
 
 @section('body')
 <div class="panel-shell">
-    @include('admin.partials.sidebar')
+    @include('user.partials.sidebar')
 
     <main class="panel-main">
         <header class="topbar">
@@ -10,7 +10,9 @@
                 <h1>Users Management</h1>
                 <p>Manage all users and their assignments.</p>
             </div>
-            <button onclick="openCreateUserModal()" class="btn btn-primary">Create User</button>
+            @if(auth()->user()->hasModulePermission('users', 'create'))
+               <button onclick="openCreateUserModal()" class="btn btn-primary">Create User</button>
+            @endif
         </header>
 
         <section class="content-area">
@@ -30,7 +32,9 @@
                                 <th>S.No.</th>
                                 <th>User</th>
                                 <th>Assignments</th>
-                                <th>Add Assignment</th>
+                                @if(auth()->user()->hasModulePermission('users', 'edit'))
+                                    <th>Add Assignment</th>
+                                @endif
                                 <th class="sticky-actions">Actions</th>
                             </tr>
                         </thead>
@@ -73,25 +77,31 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <form method="POST" action="{{ route('admin.users.assignment.update', $user) }}" class="inline-form">
-                                            @csrf
-                                            @method('PUT')
-                                            @include('admin.partials.assignment-selects')
-                                            <button class="btn btn-primary" type="submit">Add Assignment</button>
-                                        </form>
+                                        @if(auth()->user()->hasModulePermission('users', 'edit'))
+                                            <form method="POST" action="{{ route('user.users.assignment.update', $user) }}" class="inline-form">
+                                                @csrf
+                                                @method('PUT')
+                                                @include('admin.partials.assignment-selects')
+                                                <button class="btn btn-primary" type="submit">Add Assignment</button>
+                                            </form>
+                                        @endif  
                                     </td>
                                     <td class="sticky-actions">
                                         @if ($user->id === auth()->id())
                                             <span class="muted">Current</span>
                                         @else
                                             <div class="action-stack">
-                                                @if ($user->userRoles->isNotEmpty())
-                                                    <a href="#switch-user-{{ $user->id }}" class="btn btn-secondary btn-small">Switch</a>
-                                                @else
-                                                    <span class="muted">No role</span>
+                                                @if(auth()->user()->hasModulePermission('users', 'switch'))
+                                                    @if ($user->userRoles->isNotEmpty())
+                                                        <a href="#switch-user-{{ $user->id }}" class="btn btn-secondary btn-small">Switch</a>
+                                                    @else
+                                                        <span class="muted">No role</span>
+                                                    @endif
                                                 @endif
 
-                                                <a href="#delete-user-{{ $user->id }}" class="btn btn-danger btn-small">Delete</a>
+                                                @if(auth()->user()->hasModulePermission('users', 'delete'))
+                                                    <a href="#delete-user-{{ $user->id }}" class="btn btn-danger btn-small">Delete</a>
+                                                @endif
                                             </div>
                                         @endif
                                     </td>
@@ -105,6 +115,7 @@
     </main>
 </div>
 
+
 <!-- Create User Modal -->
 <div id="createUserModal" class="modal-backdrop" style="display: none;">
     <div class="modal-card">
@@ -116,7 +127,7 @@
                 @endforeach
             </div>
         @endif
-        <form method="POST" action="{{ route('admin.users.store') }}" class="form-grid">
+        <form method="POST" action="{{ route('user.users.store') }}" class="form-grid">
             @csrf
             <input name="name" placeholder="Name" required value="{{ old('name') }}">
             <input name="email" type="email" placeholder="Email" required value="{{ old('email') }}">
@@ -179,7 +190,7 @@
         <div class="modal-card">
             <h3>Delete {{ $user->name }}</h3>
             <p>Are you sure you want to delete this user? This action cannot be undone.</p>
-            <form method="POST" action="{{ route('admin.users.destroy', $user) }}">
+            <form method="POST" action="{{ route('user.users.destroy', $user) }}">
                 @csrf
                 @method('DELETE')
                 <div class="modal-actions">
